@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zarf/dummydata.dart';
 import 'package:zarf/school.dart';
 
+import '../CustomClasses.dart';
+
 
 class schoolSearch_page extends StatefulWidget {
   static const routeName = '/schoolSearch_page';
@@ -63,12 +65,13 @@ class _schoolSearch_pageState extends State<schoolSearch_page> {
         ],
         ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.w),
+        //margin: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Search bar
             Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children:[
@@ -77,6 +80,15 @@ class _schoolSearch_pageState extends State<schoolSearch_page> {
                   height: 45,
                   width: width/1.3,
                   child: CupertinoSearchTextField(
+
+                    onTap: (){
+                      showSearch(
+
+                        context: context,
+                        delegate: CustomSearchDelegate(),
+                      );
+
+                    },
                     prefixIcon: Icon(CupertinoIcons.search,
                       color: Colors.grey.shade300,
 
@@ -123,10 +135,11 @@ class _schoolSearch_pageState extends State<schoolSearch_page> {
                     thickness: 1,
                   ),
                   SizedBox(
-                    height: 13.h,
+                    height: 10.h,
                   ),
             //result description
             Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
               //margin: EdgeInsets.symmetric(horizontal:10,vertical: 10),
               child: RichText(
                 text: TextSpan(
@@ -169,7 +182,7 @@ class _schoolSearch_pageState extends State<schoolSearch_page> {
               // ),
             ),
             SizedBox(
-              height: 16.h,
+              height: 10.h,
             ),
             //dormitories
            // for(var i=0;i<Allschools.length;i++)

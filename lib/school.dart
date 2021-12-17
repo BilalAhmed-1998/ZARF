@@ -228,9 +228,7 @@ class _InstituteSearchCardState extends State<InstituteSearchCard> {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(
-          bottom: 36.h
-        ),
+        margin: EdgeInsets.symmetric(horizontal: 20.w,vertical: 18.h),
         height: this.widget.height,
         width: this.widget.width,
         //color: Colors.lightBlueAccent,

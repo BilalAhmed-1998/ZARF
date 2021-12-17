@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         designSize: Size(375, 889),
         builder: () => MaterialApp(
               theme: ThemeData(
+
                   primaryColor: Color(0xff03045e),
                   backgroundColor: Color(0xff03045e),
                   fontFamily: 'Inter'),

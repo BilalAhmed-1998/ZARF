@@ -1,9 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:zarf/screens/ref_faq.dart';
 // import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -11,6 +14,7 @@ import 'package:zarf/screens/ref_faq.dart';
 import 'package:zarf/screens/refhome_page.dart';
 import 'package:zarf/screens/schoolSearch_page.dart';
 import 'package:searchfield/searchfield.dart';
+import '../CustomClasses.dart';
 import '../category.dart';
 import '../dummydata.dart';
 import '../school.dart';
@@ -24,6 +28,19 @@ class home_page extends StatefulWidget {
 
 class _home_pageState extends State<home_page> {
   final ScaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool filterLocation2 = true;
+  bool filterLocation1 = false;
+
+  bool filterType2 = false;
+  bool filterType1 = true;
+
+  double filterDifficultyLevelmin = 1;
+  double filterDifficultyLevelmax = 4;
+
+  //double filterDifficultyValue = 1;
+
+  //var filterRangeValue = RangeValues(2, 5);
 
   @override
   Widget build(BuildContext context) {
@@ -427,81 +444,561 @@ class _home_pageState extends State<home_page> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    height: 52.h,
-                    width: 264.w,
-                    decoration:
-                    BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 6.0,
+                  InkWell(
+                    onTap: () {
+                      showSearch(
+                        context: context,
+                        delegate: CustomSearchDelegate(),
+                      );
+                    },
+                    child: Container(
+                        height: 52.h,
+                        width: 264.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    padding: EdgeInsets.only(
-                       left: 18.w,
-                       top: 6.h,
-                      // bottom: 18.h,
-                    ),
-                    child: CupertinoSearchTextField(
-                      padding: EdgeInsets.symmetric(horizontal: 7.w),
-                      autofocus: false,
-                      prefixIcon: ImageIcon(
-                        AssetImage("assets/images/search_icon.png"),
-                        size: 22.sp,
-                        color: Color(0xff9CA3AF),
-                      ),
-                      placeholderStyle: TextStyle(
-                        color: Color(0xffD1D5DB),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      backgroundColor: Colors.white,
-                      itemColor: Color(0xffD1D5DB),
-                      itemSize: 30,
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 15.h, horizontal: 18.w),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ImageIcon(
+                              AssetImage("assets/images/search_icon.png"),
+                              size: 22.sp,
+                              color: Color(0xff9CA3AF),
+                            ),
+                            SizedBox(
+                              width: 8.w,
+                            ),
+                            Text(
+                              "Search",
+                              style: TextStyle(
+                                color: Color(0xffD1D5DB),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        )
+
+                        // CupertinoSearchTextField(
+                        //
+                        //   onTap: (){
+                        //     showSearch(
+                        //         context: context,
+                        //         delegate: CustomSearchDelegate(),
+                        //     );
+                        //
+                        //   },
+                        //
+                        //   padding: EdgeInsets.symmetric(horizontal: 7.w),
+                        //   autofocus: false,
+                        //   prefixIcon: ImageIcon(
+                        //     AssetImage("assets/images/search_icon.png"),
+                        //     size: 22.sp,
+                        //     color: Color(0xff9CA3AF),
+                        //   ),
+                        //   placeholderStyle:
+                        //   TextStyle(
+                        //     color: Color(0xffD1D5DB),
+                        //     fontSize: 18,
+                        //     fontWeight: FontWeight.w400,
+                        //   ),
+                        //   backgroundColor: Colors.white,
+                        //   itemColor: Color(0xffD1D5DB),
+                        //   itemSize: 30,
+                        //   style: TextStyle(
+                        //     fontSize: 20,
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
+                        ),
                   ),
+                  //////Filter Button////
                   InkWell(
                     onTap: () {
                       showMaterialModalBottomSheet(
+                        bounce: true,
+                        backgroundColor: Colors.white,
                         context: context,
-                        builder: (context) => Container(
-                         // color: Colors.white,
-                          margin: EdgeInsets.symmetric(vertical: 18.h,horizontal: 30.w),
-                          width: width,
-                          height: 504.h,
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Center(
-                                  child: Text("Filter",
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: Color(0xff1F2937),
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: "Inter",
+                        builder: (context) => StatefulBuilder(builder:
+                            (BuildContext context,
+                                StateSetter
+                                    setsheetState /*You can rename this!*/) {
+                          return Container(
+                            color: Colors.white,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 18.h, horizontal: 30.w),
+                            width: width,
+                            height: 504.h,
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Text("Filter",
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Color(0xff1F2937),
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: "Inter",
+                                        )),
+                                  ),
+                                  Divider(
+                                    color: Color(0xffF4F4F5),
+                                    thickness: 2,
+                                    height: 20.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      ImageIcon(
+                                        AssetImage(
+                                            "assets/images/location.png"),
+                                        size: 17.sp,
+                                        color: Color(0xff1F2937),
+                                      ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      Text(
+                                        "Location",
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Color(0xff1F2937),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Inter",
+                                        ),
                                       )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ToggleButtons(
+                                          isSelected: [
+                                            filterLocation1,
+                                            filterLocation2
+                                          ],
+                                          selectedColor: Colors.transparent,
+                                          renderBorder: false,
+                                          color: Color(0xff64748B),
+                                          fillColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: (int index) {
+                                            setsheetState(() {
+                                              if (index == 0) {
+                                                filterLocation1 = true;
+                                                filterLocation2 = false;
+                                              } else {
+                                                filterLocation2 = true;
+                                                filterLocation1 = false;
+                                              }
+                                            });
+                                          },
+                                          children: [
+                                            Container(
+                                              width: 99.w,
+                                              height: 30,
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 8.w, 0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Color(0xff03045e),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: (filterLocation1)
+                                                    ? Color(0xff03045e)
+                                                    : Colors.white,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "Prešov",
+                                                  style: TextStyle(
+                                                      color: (filterLocation1)
+                                                          ? Colors.white
+                                                          : Color(0xff03045e),
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: "Inter"),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 99.w,
+                                              height: 30,
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 8.w, 0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Color(0xff03045e),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: (filterLocation2)
+                                                    ? Color(0xff03045e)
+                                                    : Colors.white,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "Košice",
+                                                  style: TextStyle(
+                                                      color: (filterLocation2)
+                                                          ? Colors.white
+                                                          : Color(0xff03045e),
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: "Inter"),
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 33.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      ImageIcon(
+                                        AssetImage(
+                                            "assets/images/parcel_icon.png"),
+                                        size: 17.sp,
+                                        color: Color(0xff1F2937),
+                                      ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      Text(
+                                        "Type",
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Color(0xff1F2937),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Inter",
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ToggleButtons(
+                                          isSelected: [
+                                            filterType1,
+                                            filterType2
+                                          ],
+                                          selectedColor: Colors.transparent,
+                                          renderBorder: false,
+                                          color: Color(0xff64748B),
+                                          fillColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: (int index) {
+                                            setsheetState(() {
+                                              if (index == 0) {
+                                                filterType1 = true;
+                                                filterType2 = false;
+                                              } else {
+                                                filterType2 = true;
+                                                filterType1 = false;
+                                              }
+                                            });
+                                          },
+                                          children: [
+                                            Container(
+                                              width: 80.w,
+                                              height: 80.h,
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 8.w, 0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Color(0xff03045e),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: (filterType1)
+                                                    ? Color(0xff03045e)
+                                                    : Colors.white,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image(
+                                                    image: AssetImage(
+                                                      "assets/images/state_type.png",
+                                                    ),
+                                                    height: 35.h,
+                                                    width: 60.w,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 7.h,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      "State",
+                                                      style: TextStyle(
+                                                          color: (filterType1)
+                                                              ? Colors.white
+                                                              : Color(
+                                                                  0xff03045e),
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: "Inter"),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 80.w,
+                                              height: 80.h,
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 8.w, 0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Color(0xff03045e),
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: (filterType2)
+                                                    ? Color(0xff03045e)
+                                                    : Colors.white,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image(
+                                                    image: AssetImage(
+                                                      "assets/images/private_type.png",
+                                                    ),
+                                                    height: 33.h,
+                                                    width: 60.w,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 7.h,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      "Private",
+                                                      style: TextStyle(
+                                                          color: (filterType2)
+                                                              ? Colors.white
+                                                              : Color(
+                                                                  0xff03045e),
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: "Inter"),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ]),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 33.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      ImageIcon(
+                                        AssetImage(
+                                            "assets/images/dashboard_icon.png"),
+                                        size: 17.sp,
+                                        color: Color(0xff1F2937),
+                                      ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      Text(
+                                        "School Difficulty",
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Color(0xff1F2937),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Inter",
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  //SizedBox(height: 23.h,),
+                                  Container(
+                                    color: Colors.white,
+                                    height: 100.h,
+                                    width: 188.w,
+                                    child: FlutterSlider(
+                                      handlerHeight: 15.sp,
+                                      handlerWidth: 15.sp,
+                                      rangeSlider: true,
+                                      values: [
+                                        filterDifficultyLevelmin,
+                                        filterDifficultyLevelmax
+                                      ],
+                                      max: 5,
+                                      min: 1,
+                                      onDragging: (index, min, max) {
+                                        setState(() {
+                                          filterDifficultyLevelmin = min;
+                                          filterDifficultyLevelmax = max;
+                                        });
+                                      },
+                                      touchSize: 5,
+                                      minimumDistance: 1,
+                                      maximumDistance: 5,
+                                      tooltip: FlutterSliderTooltip(
+                                        disabled: true,
+                                      ),
+                                      trackBar: FlutterSliderTrackBar(
+                                        // activeTrackBarHeight: 2,
+                                        // inactiveTrackBarHeight: 2,
+                                        inactiveTrackBar: BoxDecoration(
+                                          color: Color(0xff6B7280),
+                                        ),
+                                        activeTrackBar: BoxDecoration(
+                                          color: Color(0xff03045e),
+                                        ),
+                                      ),
+                                      step: FlutterSliderStep(step: 1),
+                                      jump: true,
+                                      hatchMark: FlutterSliderHatchMark(
+                                          labelsDistanceFromTrackBar: 35,
+                                          linesAlignment:
+                                              FlutterSliderHatchMarkAlignment
+                                                  .right,
+                                          labels: [
+                                            FlutterSliderHatchMarkLabel(
+                                                percent: 0,
+                                                label: Text(
+                                                  '1',
+                                                  style: TextStyle(
+                                                    fontFamily: "InterSemi",
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18.sp,
+                                                    color: Color(0xff1F2937),
+                                                  ),
+                                                )),
+                                            FlutterSliderHatchMarkLabel(
+                                                percent: 25,
+                                                label: Text(
+                                                  '2',
+                                                  style: TextStyle(
+                                                    fontFamily: "InterSemi",
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18.sp,
+                                                    color: Color(0xff1F2937),
+                                                  ),
+                                                )),
+                                            FlutterSliderHatchMarkLabel(
+                                                percent: 50,
+                                                label: Text(
+                                                  '3',
+                                                  style: TextStyle(
+                                                    fontFamily: "InterSemi",
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18.sp,
+                                                    color: Color(0xff1F2937),
+                                                  ),
+                                                )),
+                                            FlutterSliderHatchMarkLabel(
+                                                percent: 75,
+                                                label: Text(
+                                                  '4',
+                                                  style: TextStyle(
+                                                    fontFamily: "InterSemi",
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18.sp,
+                                                    color: Color(0xff1F2937),
+                                                  ),
+                                                )),
+                                            FlutterSliderHatchMarkLabel(
+                                                percent: 100,
+                                                label: Text(
+                                                  '5',
+                                                  style: TextStyle(
+                                                    fontFamily: "InterSemi",
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18.sp,
+                                                    color: Color(0xff1F2937),
+                                                  ),
+                                                )),
+                                          ]),
+                                      rightHandler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: Color(0xff03045e)),
+                                          child: Icon(
+                                            Icons.circle,
+                                            size: 8.sp,
+                                            color: Colors.white,
+                                          )),
+                                      handler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: Color(0xff03045e)),
+                                          child: Icon(
+                                            Icons.circle,
+                                            size: 8.sp,
+                                            color: Colors.white,
+                                          )),
                                     ),
-                                ),
-                                Divider(
-                                  color: Color(0xffF4F4F5),
-                                  thickness: 1,
-                                  height: 16.h,
-                                ),
-                              ],
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                  Center(
+                                    child: SizedBox(
+                                      height: 46.h,
+                                      width: 175.w,
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            // Navigator.pushNamed(context, dormitorySearch_page.routeName);
+                                          },
+                                          child: Text(
+                                            "View Schools",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Color(0xff03045e),
+                                            //padding: EdgeInsets.fromLTRB(150, 15, 150, 15)
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       );
-
                     },
                     child: Container(
                         width: 59.sp,

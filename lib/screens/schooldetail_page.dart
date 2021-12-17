@@ -20,7 +20,35 @@ class schooldetail_page extends StatefulWidget {
   List <String> salaryexpectation;
   List isSelected;
 
+  //Difficulty Handling//
+  Color difContainerColor;
+  String difContainerText;
+
   schooldetail_page({this.institute}){
+
+    if(this.institute.institutedetails.rating.round() == 1){
+      difContainerColor = Color(0xffCAF0F8);
+      difContainerText = "Easy";
+
+    }else if(this.institute.institutedetails.rating.round() == 2){
+
+      difContainerColor = Color(0xff90E0EF);
+      difContainerText = "Normal";
+
+    }else if(this.institute.institutedetails.rating.round() == 3){
+      difContainerColor = Color(0xff00B4D8);
+      difContainerText = "Average";
+
+    }else if(this.institute.institutedetails.rating.round() == 4){
+      difContainerColor = Color(0xff0077B6);
+      difContainerText = "Challenging";
+
+    }else{
+      difContainerColor = Color(0xff03045e);
+      difContainerText = "Hard";
+    }
+
+
 
     this.salaryexpectation = List.filled(this.institute.institutedetails.teachingprograms.length, "-");
 
@@ -285,18 +313,61 @@ class _schooldetail_pageState extends State<schooldetail_page> {
                       SizedBox(
                         height: 22.h,
                       ),
-                      SmoothStarRating(
-                        allowHalfRating: true,
-                        onRated: (v) {},
-                        starCount: 5,
-                        rating: this.widget.institute.institutedetails.rating,
-                        isReadOnly: true,
-                        size: 20.sp,
-                        color: Color(0xffFCD34D),
-                        borderColor: Colors.black,
+                      Container(
+                        height: 30.h,
+                        width: 150.w,
+                        decoration: BoxDecoration(
+                          color: this.widget.difContainerColor,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+
+                        padding: EdgeInsets.symmetric(vertical: 5.h,horizontal: 5.h),
+                        child: Row(
+                          children: [
+                            ImageIcon(
+                              AssetImage("assets/images/dashboard_icon.png"),
+                              size: 20.sp,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 7.w,),
+                            Text(
+                              this.widget.institute.institutedetails.rating.round().toString(),
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 14.w,),
+                            Text(
+                              this.widget.difContainerText,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.white,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+
+
+
+                          ],
+                        ),
                       ),
+                      // SmoothStarRating(
+                      //   allowHalfRating: true,
+                      //   onRated: (v) {},
+                      //   starCount: 5,
+                      //   rating: this.widget.institute.institutedetails.rating,
+                      //   isReadOnly: true,
+                      //   size: 20.sp,
+                      //   color: Color(0xffFCD34D),
+                      //   borderColor: Colors.black,
+                      // ),
                       SizedBox(
-                        height: 32.h,
+                        height: 20.h,
                       ),
                       Text(
                         "Tution",
