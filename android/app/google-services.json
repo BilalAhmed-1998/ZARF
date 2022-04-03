@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "287667767338",
+    "project_id": "zarf-study-app",
+    "storage_bucket": "zarf-study-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287667767338:android:7d95be52d0dac5255adb53",
+        "android_client_info": {
+          "package_name": "com.thezarfapp.zarf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287667767338-v7j9ch234cioj5spoqsnmjqra33up2r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAUL3g0Bzfc5Q26gWaO5H06WR4ogAUOoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287667767338-v7j9ch234cioj5spoqsnmjqra33up2r8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
